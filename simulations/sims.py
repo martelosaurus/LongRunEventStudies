@@ -16,9 +16,17 @@ B = (np.sqrt(h)*np.random.randn(m,n)).cumsum(1)
 # stylization parameters; mean and covariance 
 mu = np.zeros(m)
 sig_a, sig_b = 1., .5
-A = sig_a*np.ones((m,m))+(sig_b-sig_a)*np.eye(m)
+A = sig_b*np.ones((m,m))+(sig_a-sig_b)*np.eye(m)
 
 # solution
-S = np.exp((mu-.5*A**2.)*t-A*B)
+d = mu-.5*(A**2.).sum(1)
+S = np.exp(np.outer(d,t)+A@B)
+
+# plot
+for i in range(0,m):
+	plt.plot(t,S[i,:])
+plt.grid()
+plt.show()
 
 # wald test
+BHAR = 1.
